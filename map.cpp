@@ -2,8 +2,6 @@
 
 #include "objectmap.hpp"
 
-
-//конструктор
 Map::Map(int x, int y) : size_x(x), size_y(y)
 {
     map = new int*[size_x];
@@ -14,9 +12,6 @@ Map::Map(int x, int y) : size_x(x), size_y(y)
     }
 
 }
-
-
-//деструктор
 Map::~Map(){
 
     for(int i = 0; i < size_y; ++i){
@@ -27,8 +22,6 @@ Map::~Map(){
     delete[] map_signal;
 }
 
-
-//добавляет объект на карту с начальными координатами
 int Map::add_object(int posx, int posy, int sizex, int sizey, int type){
 
     if(posx < 0 || posy < 0){
@@ -45,11 +38,6 @@ int Map::add_object(int posx, int posy, int sizex, int sizey, int type){
     }
     return 0;
 }
-
-
-
-
-//удаляет объект
 int Map::delete_object(int posx, int posy, int sizex, int sizey){
 
     if(posx < 0 || posy < 0){
@@ -66,14 +54,9 @@ int Map::delete_object(int posx, int posy, int sizex, int sizey){
     }
     return 0;
 }
-
-
-
 int** Map::get_map(){
     return map;
 }
-
-
 double** Map::get_map_signal(){
     return map_signal;
 }
