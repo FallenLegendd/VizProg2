@@ -19,10 +19,10 @@ MainWindow::MainWindow(QWidget *parent)
     this->setFixedSize(this->w_width, this->w_height);
 
     map = new HeatMap(pos_map_x, pos_map_y, size_map_x, size_map_y);
-    map->add_object(100, 400, 60, 5, (int) type_material::GLASS);
+    map->add_object(100, 900, 60, 5, (int) type_material::GLASS);
     map->add_object(100, 300, 60, 5, (int) type_material::WOOD);
-    map->add_object(200, 300, 60, 20, (int) type_material::WOOD);
-    map->add_object(100, 200, 60, 5, (int) type_material::DRYWALL);
+    map->add_object(400, 700, 60, 20, (int) type_material::WOOD);
+    map->add_object(500, 400, 60, 5, (int) type_material::DRYWALL);
 
     map->add_object(500, 600, 60, 5, (int) type_material::IRR_GLASS);
 

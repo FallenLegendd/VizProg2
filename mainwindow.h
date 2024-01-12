@@ -31,9 +31,9 @@ private:
 
 public:
 
-    int w_height = 1000, w_width = 1200;
+    int w_height = 1500, w_width = 2100;
     int pos_map_x = 180, pos_map_y = 0;
-    int size_map_x = 1000, size_map_y = 1000;
+    int size_map_x = 1900, size_map_y = 1500;
     
 
     QLabel *label_;

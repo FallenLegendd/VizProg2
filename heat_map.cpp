@@ -3,6 +3,7 @@
 #include <iostream>
 #include <cmath>
 
+
 #include "objectmap.hpp"
 #include "propagation_model.hpp"
 
@@ -161,48 +162,91 @@ void HeatMap::set_value_f(double f){
 QGraphicsView *HeatMap::get_view(){
     return view;
 }
-void thread_signal_calculation(HeatMap *heatmap, int start_pos, int step){
-    int x, y;
-    for(y = 0; y < heatmap->get_size_y(); ++y){
 
-        for(x = start_pos; x < heatmap->get_size_x(); x += step){
-            switch(heatmap->get_map()[y][x]){
-            case (int)type_material::NO_MATERIAL:
-                heatmap->calculation_signal_by_Brezenham(x, y);
-                break;
-            default:
-                break;
+/*void HeatMap::signal_calculation(){
+    int x, y;
+    // Перебираем все пиксели тепловой карты последовательно
+    for(y = 0; y < get_size_y(); ++y){
+        for(x = 0; x < get_size_x(); ++x){
+            switch(get_map()[y][x]){
+                case (int)type_material::NO_MATERIAL:
+                    // Вызываем функцию расчета сигнала для каждого пикселя
+                    calculation_signal_by_Brezenham(x, y);
+                    break;
+                default:
+                    break;
             }
         }
     }
 }
 
+*/
+
 void HeatMap::signal_calculation(){
-    for(int i = 0; i < COUNT_THREAD; ++i){
-        threads[i] = std::thread(thread_signal_calculation, this, i, COUNT_THREAD);
+    int x, y;
+
+    // Массив точек для вышек
+    struct Tower {
+        int x;
+        int y;
+    };
+
+    set_point(100, 100);
+    for(y = 0; y < get_size_y(); ++y){
+        for(x = 0; x < get_size_x(); ++x){
+            switch(get_map()[y][x]){
+                case (int)type_material::NO_MATERIAL:
+                    calculation_signal_by_Brezenham(x, y);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
-    for(int i = 0; i < COUNT_THREAD; ++i){
-        threads[i].join();
+
+
+    Tower towers[] = {{800, 100}, {100, 700}, {900, 900}};
+
+    for (const auto& tower : towers) {
+        set_point(tower.x, tower.y);
+        for(y = 0; y < get_size_y(); ++y){
+            for(x = 0; x < get_size_x(); ++x){
+                switch(get_map()[y][x]){
+                    case (int)type_material::NO_MATERIAL:
+                        double current_signal = map_signal[y][x];
+                        calculation_signal_by_Brezenham(x, y);
+                        if (map_signal[y][x] < current_signal) {
+                            // Восстанавливаем предыдущее значение, так как новое не лучше
+                            map_signal[y][x] = current_signal;
+                        }
+                        break;
+                }
+            }
+        }
     }
 }
 
 
+
+
+
+
 void HeatMap::draw(){
-    pixmap->fill( Qt::black);
+    pixmap->fill(Qt::black);
     QPainter painter(pixmap);
+    // Вызов функции расчета сигнала, которая теперь работает последовательно
     signal_calculation();
     for(int y = 0; y < size_y; ++y){
         for(int x = 0; x < size_x; ++x){
-
             switch(get_map()[y][x]){
-            case (int)type_material::NO_MATERIAL:
-                painter.setPen(dbm_in_color( get_map_signal()[y][x] ));
-                painter.drawPoint(x, y);
-                break;
-            default:
-                painter.setPen(color_material[ get_map()[y][x] ]);
-                painter.drawPoint(x, y);
-                break;
+                case (int)type_material::NO_MATERIAL:
+                    painter.setPen(dbm_in_color(get_map_signal()[y][x]));
+                    painter.drawPoint(x, y);
+                    break;
+                default:
+                    painter.setPen(color_material[get_map()[y][x]]);
+                    painter.drawPoint(x, y);
+                    break;
             }
         }
     }

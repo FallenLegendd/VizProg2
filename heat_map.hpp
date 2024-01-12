@@ -39,9 +39,12 @@ private:
     double **map_signal;
     int size_x, size_y;
     int pos_point_x = 100, pos_point_y = 100;
+    int pos_point_x2 = 100, pos_point_y2 = 800;
+    int pos_point_x3 = 500, pos_point_y3 = 900;
+
     double tx_power = 23;//mw
     double ant_power = 6;//коэф усиления
-    double val_f = 2.4;
+    double val_f = 1.5;
 
     std::thread threads[COUNT_THREAD];
     QColor dbm_in_color(double dbm);
